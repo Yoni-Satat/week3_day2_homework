@@ -1,7 +1,7 @@
 require('pg')
 
 class Bounty
-  attr_accessor :id, :name, :species, :bounty_value, :favourite_weapon
+  attr_accessor :name, :species, :bounty_value, :favourite_weapon, :id
 
   def initialize(options)
     @id = options['id'].to_i if options['id']
@@ -71,6 +71,29 @@ class Bounty
       values = [@id]
       db.prepare("delete_one", sql)
       db.exec_prepared("delete_one", values)
+      db.close()
+  end
+
+  def update()
+    db = PG.connect({
+      dbname: 'bounties',
+      host: 'localhost'
+      })
+      sql = "
+        UPDATE bounties
+        SET
+        (
+          name,
+          species,
+          bounty_value,
+          favourite_weapon
+        ) = (
+          $1, $2, $3, $4
+        ) WHERE id = $5
+      "
+      values = [@name, @species, @bounty_value, @favourite_weapon, @id]
+      db.prepare("update", sql)
+      db.exec_prepared("update", values)
       db.close()
   end
 end
