@@ -1,7 +1,8 @@
 require('pg')
 
 class Bounty
-  attr_accessor :name, :species, :bounty_value, :favourite_weapon, :id
+  attr_accessor :name, :species, :bounty_value, :favourite_weapon
+  attr_reader :id
 
   def initialize(options)
     @id = options['id'].to_i if options['id']
